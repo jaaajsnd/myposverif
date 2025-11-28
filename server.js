@@ -53,16 +53,27 @@ const pendingOrders = new Map();
 
 // Helper function to create signature
 function createSignature(data) {
-  // Concatenate all values with dash separator
+  // Step 1: Concatenate all values with dash separator
   const values = Object.values(data);
-  const concData = Buffer.from(values.join('-')).toString('base64');
+  const concatenated = values.join('-');
   
-  // Sign with private key
+  // Step 2: Base64 encode the concatenated string
+  const concData = Buffer.from(concatenated, 'utf8').toString('base64');
+  
+  // Step 3: Sign the base64 encoded data with private key using SHA256
   const sign = crypto.createSign('SHA256');
   sign.update(concData);
   sign.end();
   
+  // Step 4: Base64 encode the signature
   const signature = sign.sign(MYPOS_PRIVATE_KEY, 'base64');
+  
+  console.log('Signature Debug:');
+  console.log('- Values:', values);
+  console.log('- Concatenated:', concatenated);
+  console.log('- Base64 data:', concData);
+  console.log('- Signature:', signature);
+  
   return signature;
 }
 
@@ -73,16 +84,27 @@ function verifySignature(data, signature) {
     const dataWithoutSignature = { ...data };
     delete dataWithoutSignature.Signature;
     
-    // Concatenate all values with dash separator
+    // Step 1: Concatenate all values with dash separator
     const values = Object.values(dataWithoutSignature);
-    const concData = Buffer.from(values.join('-')).toString('base64');
+    const concatenated = values.join('-');
     
-    // Verify signature
+    // Step 2: Base64 encode the concatenated string
+    const concData = Buffer.from(concatenated, 'utf8').toString('base64');
+    
+    // Step 3: Verify signature
     const verify = crypto.createVerify('SHA256');
     verify.update(concData);
     verify.end();
     
-    return verify.verify(MYPOS_PUBLIC_CERT, signature, 'base64');
+    const isValid = verify.verify(MYPOS_PUBLIC_CERT, signature, 'base64');
+    
+    console.log('Verification Debug:');
+    console.log('- Values:', values);
+    console.log('- Concatenated:', concatenated);
+    console.log('- Base64 data:', concData);
+    console.log('- Is valid:', isValid);
+    
+    return isValid;
   } catch (error) {
     console.error('Signature verification error:', error);
     return false;
