@@ -22,7 +22,7 @@ const mypos = require('@mypos-ltd/mypos')({
     okUrl: process.env.APP_URL ? `${process.env.APP_URL}/payment-success` : `http://localhost:${PORT}/payment-success`,
     cancelUrl: process.env.APP_URL ? `${process.env.APP_URL}/payment-cancel` : `http://localhost:${PORT}/payment-cancel`,
     notifyUrl: process.env.APP_URL ? `${process.env.APP_URL}/payment-notify` : `http://localhost:${PORT}/payment-notify`,
-    keyIndex: 3,
+    keyIndex: 2,
     privateKey: `-----BEGIN RSA PRIVATE KEY-----
 MIICWwIBAAKBgQCWeAGt+IutRBfohdVtZuVxyCkO8MLVTTSjAnQ8qlWhLQXK+DA4
 C+UVoLSx/TtWHz+MV+P2rL193H8UHob2dq2Wc2D6Cmoo6UqAe5KmklAO+v4VJHl9
